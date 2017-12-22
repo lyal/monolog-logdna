@@ -41,8 +41,9 @@ class LogDNAHandler extends AbstractProcessingHandler
         $httpClient = null,
         $level = Logger::DEBUG,
         $bubble = true
-    ) {
-    
+    )
+    {
+
 
         parent::__construct($level, $bubble);
         $this->key = $key ?? getenv('LOGDNA_INGESTION_KEY');
@@ -87,6 +88,8 @@ class LogDNAHandler extends AbstractProcessingHandler
             'auth' => [$this->key, ''],
             'body' => $record['formatted']
         ]);
+
+
     }
 
     /**

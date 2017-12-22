@@ -19,7 +19,8 @@ $ composer require lyal/monolog-logdna
 
 ``` php
 $logger = new Logger('general');
-$logdnaHandler = new LogDNAHandler();
+$logdnaHandler = new LogDNAHandler('YOUR_API_KEY'); // Can also be passed by env
+$logger->pushHandler($logdnaHandler); 
 $logger->debug('this is my message!');
 ```
 
