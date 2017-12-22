@@ -21,6 +21,18 @@ class LogDNAHandler extends AbstractProcessingHandler
     protected $api = 'https://logs.logdna.com/logs/ingest';
 
 
+    /**
+     * LogDNAHandler constructor.
+     * @param null $key
+     * @param null $host
+     * @param null $mac
+     * @param null $ip
+     * @param null $httpClient
+     * @param int $level
+     * @param bool $bubble
+     */
+
+
     public function __construct(
         $key = null,
         $host = null,
@@ -29,21 +41,17 @@ class LogDNAHandler extends AbstractProcessingHandler
         $httpClient = null,
         $level = Logger::DEBUG,
         $bubble = true
-    ) {
-    
+    )
+    {
+
         parent::__construct($level, $bubble);
         $this->key = $key ?? getenv('LOGDNA_INGESTION_KEY');
         $this->carbon = new Carbon;
         $this->hostname = $host ?? getenv('LOGDNA_HOSTNAME') ?: gethostname();
         $this->mac = $mac;
         $this->ip = $ip ?? getenv('LOGDNA_HOST_IP') ?: gethostbyname(gethostname());
-
-
         $this->setHttpClient($httpClient ?? new Client());
-
-        if (getenv('LOGDNA_API_URL')) {
-            $this->api = getenv('LOGDNA_API_URL');
-        }
+        $this->api = getenv('LOGDNA_API_URL') ?: $this->api;
     }
 
     /**
@@ -55,9 +63,17 @@ class LogDNAHandler extends AbstractProcessingHandler
         $this->httpClient = $client;
     }
 
+    /**
+     * Attempts to write a log item once to the LogDNA api service
+     *
+     * It's possible that we should try this 5 times as other libraries do
+     *
+     * @param array $record
+     */
+
     protected function write(array $record)
     {
-        $response = $this->httpClient->post($this->api, [
+        $this->httpClient->post($this->api, [
             'headers' => [
                 'Content-Type' => 'application/json',
 
@@ -72,6 +88,12 @@ class LogDNAHandler extends AbstractProcessingHandler
             'body' => $record['formatted']
         ]);
     }
+
+    /**
+     * Set the default formatter to our own
+     *
+     * @return FormatterInterface
+     */
 
     protected function getDefaultFormatter(): FormatterInterface
     {

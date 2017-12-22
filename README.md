@@ -32,13 +32,19 @@ this will result in a faster request lifecycle and will prevent accidental failu
 
 You can set two environment variables for this library:
 
+*APP_ENV* -- the environment that the logger is running in
+
 *LOGDNA_INGESTION_KEY* -- the ingestion key provided in your LogDNA key
-        if (getenv('LOGDNA_API_URL')) {
+
+*LOGDNA_HOSTNAME* -- (string) the host name of the current environment
+
+*LOGDNA_HOST_IP* -- (string) the ip address of the currrent environment
+
+*LOGDNA_API_URL* -- (url) the base url for your LogDNA service
+
 
 
 ## Testing
-
-Testing is run through phpunit -- environment variables can be tweaked.
 
 ``` bash
 phpunit 
